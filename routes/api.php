@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\V1\Admin\CandidateController;
 use App\Http\Controllers\Api\V1\Admin\VacancyController;
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -28,5 +29,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::prefix('admin')->middleware(['role:admin'])->group(function () {
         Route::resource('vacancies', VacancyController::class)->except(['create', 'edit']);
         Route::resource('candidates', CandidateController::class)->except(['create', 'edit']);
+    });
+
+    Route::prefix('candidates')->group(function () {
+        Route::get('candidacies', [UserController::class, 'candidacies']);
+        Route::get('candidacies/{vacancy}/apply-candidacy', [UserController::class, 'applyCandidacy']);
+        Route::get('candidacies/{vacancy}/remove-candidacy', [UserController::class, 'removeCandidacy']);
     });
 });
