@@ -3,6 +3,10 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Enums\UserRole;
+use App\Traits\Filterable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -11,7 +15,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, Filterable;
 
     /**
      * The attributes that are mass assignable.
@@ -46,5 +50,19 @@ class User extends Authenticatable
 
     public function candidacies() : HasMany {
         return $this->hasMany(Candidacy::class);
+    }
+
+    public function scopeCandidates(Builder $query)
+    {
+        return $query->where('role', UserRole::CANDIDATE);
+    }
+
+    public static function searchable() : array 
+    {
+        return [
+            'id',
+            'name',
+            'email'
+        ];
     }
 }
