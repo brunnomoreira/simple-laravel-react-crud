@@ -11,20 +11,42 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { Link as RouterLink } from "react-router-dom";
+import FormControl from '@mui/material/FormControl';
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 import HomeLayout from "../../layouts/Home";
+import { useMutation } from 'react-query';
+import { Controller, useForm } from 'react-hook-form';
+import { AuthContext } from '../../contexts/AuthContext';
+import api from '../../services/api';
 
 function Register() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-  };
+  const navigate = useNavigate();
+  const authContext = React.useContext(AuthContext);
+  const { register, handleSubmit, control, watch, formState: { errors } } = useForm({
+    defaultValues: {
+      name: '',
+      email: '',
+      password: '',
+      password_confirmation: ''
+    }
+  });
 
+  const mutation = useMutation(api.register, {
+    onSuccess: data => {
+      authContext.login(data);
+      navigate("/");
+    },
+    onError: (error, variables, context) => {
+      console.log("Deu ruim");
+      console.log(error);
+    }
+  });
+
+  const onSubmit = (data) => {
+    mutation.mutate(data);
+  }
+  
   return (
     <HomeLayout>
       <Container component="main" maxWidth="xs">
@@ -43,51 +65,91 @@ function Register() {
           <Typography component="h1" variant="h5">
             Cadastre-se
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="name"
-                  label="Nome"
-                  name="name"
-                  autoComplete="family-name"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email"
-                  name="email"
-                  autoComplete="email"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="password"
-                  label="Senha"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="password_confirmation"
-                  label="Informe sua senha novamente"
-                  type="password"
-                  id="password_confirmation"
-                  autoComplete="new-password"
-                />
-              </Grid>
-            </Grid>
+          <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate sx={{ mt: 1 }}>
+            <FormControl fullWidth>
+              <Controller
+                name="name"
+                control={control}
+                rules={{ required: "Campo obrigatório" }}
+                render={({ field }) => (
+                  <TextField
+                    autoFocus
+                    fullWidth
+                    label="Nome*"
+                    margin="normal"
+                    autoComplete="family-name"
+                    error={errors.name ? true : false}
+                    helperText={errors.name?.message}
+                    {...field}
+                  />
+                )}
+              />
+            </FormControl>
+            <FormControl fullWidth>
+              <Controller
+                name="email"
+                control={control}
+                rules={{ required: "Campo obrigatório" }}
+                render={({ field }) => (
+                  <TextField
+                    autoFocus
+                    fullWidth
+                    label="Email*"
+                    margin="normal"
+                    autoComplete="email"
+                    error={errors.email ? true : false}
+                    helperText={errors.email?.message}
+                    {...field}
+                  />
+                )}
+              />
+            </FormControl>
+            <FormControl fullWidth>
+              <Controller
+                name="password"
+                control={control}
+                rules={{ required: "Campo obrigatório" }}
+                render={({ field }) => (
+                  <TextField
+                    fullWidth
+                    label="Senha*"
+                    margin="normal"
+                    type="password"
+                    autoComplete="new-password"
+                    error={errors.password ? true : false}
+                    helperText={errors.password?.message}
+                    {...field}
+                  />
+                )}
+              />
+            </FormControl>
+            <FormControl fullWidth>
+              <Controller
+                name="password_confirmation"
+                control={control}
+                rules={{ 
+                  required: "Campo obrigatório",
+                  validate: (val) => {
+                    if (watch('password') != val) {
+                      return "Confirmação de senha não corresponde a senha";
+                    }
+                  },
+                }}
+                render={({ field }) => (
+                  <TextField
+                    fullWidth
+                    label="Confirme sua senha*"
+                    margin="normal"
+                    type="password"
+                    autoComplete="new-password"
+                    error={errors.password_confirmation ? true : false}
+                    helperText={errors.password_confirmation?.message}
+                    {...field}
+                  />
+                )}
+              />
+            </FormControl>
+
             <Button
               type="submit"
               fullWidth
