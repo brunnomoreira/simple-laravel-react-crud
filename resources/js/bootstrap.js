@@ -8,9 +8,17 @@ window._ = _;
  */
 
 import axios from 'axios';
-window.axios = axios;
 
+axios.get('/sanctum/csrf-cookie');
+
+const instance = axios.create({
+    baseURL: 'http://localhost/api'
+});
+
+window.axios = instance;
+window.axios.defaults.withCredentials = true;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.headers.common['Accept'] = 'application/json';
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening

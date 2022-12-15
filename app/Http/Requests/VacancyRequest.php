@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\VacancyStatus;
+use App\Enums\VacancyType;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class VacancyRequest extends FormRequest
 {
@@ -13,7 +16,7 @@ class VacancyRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,8 +26,7 @@ class VacancyRequest extends FormRequest
      */
     public function rules()
     {
-        if ($this->getMethod() == 'POST') 
-        {
+        if ($this->getMethod() == 'POST') {
             return [
                 'name' => 'required',
                 'summary' => 'required',
