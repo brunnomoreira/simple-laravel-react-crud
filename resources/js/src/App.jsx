@@ -12,12 +12,18 @@ import {
   QueryClientProvider,
 } from 'react-query'
 
+import { ReactQueryDevtools } from "react-query/devtools";
+
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import VacanciesList from "./pages/Admin/Vacancies/List";
 import VacanciesNew from "./pages/Admin/Vacancies/New";
 import AuthContextProvider from "./contexts/AuthContext";
+import { ToastContainer } from "react-toastify";
+
+import 'react-toastify/dist/ReactToastify.css';
+import VacanciesEdit from "./pages/Admin/Vacancies/Edit";
 
 const router = createBrowserRouter([
   {
@@ -43,6 +49,18 @@ const router = createBrowserRouter([
         path: "vacancies/new",
         element: <VacanciesNew />,
       },
+      {
+        path: "vacancies/edit/:id",
+        element: <VacanciesEdit />,
+      },
+      {
+        path: "candidates",
+        element: <VacanciesList />,
+      },
+      {
+        path: "candidates/new",
+        element: <VacanciesNew />,
+      },
     ],
   },
 ]);
@@ -62,15 +80,17 @@ const queryClient = new QueryClient();
 
 const App = () => {
   return (
-    <React.StrictMode>
+    // <React.StrictMode>
       <QueryClientProvider client={queryClient}>
         <AuthContextProvider>
           <ThemeProvider theme={theme}>
             <RouterProvider router={router} />
+            <ToastContainer />
           </ThemeProvider>
         </AuthContextProvider>
+        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
-    </React.StrictMode>
+    // </React.StrictMode>
   );
 }
 

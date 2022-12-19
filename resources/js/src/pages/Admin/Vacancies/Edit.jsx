@@ -13,20 +13,20 @@ import {
 
 import { toast } from 'react-toastify';
 
-import { useMutation } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 
 import { useForm, Controller } from "react-hook-form";
 
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { Link as RouterLink, useNavigate, useParams } from "react-router-dom";
 
 import AdminLayout from "../../../layouts/Admin";
 import api from '../../../services/api';
 
 
-function VacanciesNew() {
+function VacanciesEdit() {
+  const params = useParams();
   const navigate = useNavigate();
-
-  const { handleSubmit, control, formState: { errors } } = useForm({
+  const { reset, handleSubmit, control, formState: { errors } } = useForm({
     defaultValues: {
       name: '',
       summary: '',
@@ -35,14 +35,22 @@ function VacanciesNew() {
       status: 'open'
     }
   });
+
+  const query = useQuery('vacancy', async () => await api.getVacancy(params.id));
+
+  React.useEffect(() => {
+    if(query.status == 'success') {
+      reset(query.data);
+    }
+  }, [query.status]);
   
-  const mutation = useMutation(api.createVacancy, {
+  const mutation = useMutation(async (data) => await api.updateVacancy(query.data.id, data), {
     onSuccess: data => {
-      toast.success("Vaga criada com sucesso!");
+      toast.success("Vaga atualizada com sucesso!");
       navigate("/admin/vacancies");
     },
     onError: (error, variables, context) => {
-      toast.success("Erro ao criar vaga");
+      toast.success("Erro ao atualizar vaga");
       console.log(error);
     }
   });
@@ -163,7 +171,7 @@ function VacanciesNew() {
                   type="submit"
                   variant="contained"
                 >
-                  Cadastrar
+                  Salvar
                 </Button>
               </Box>
             </Box>
@@ -174,4 +182,4 @@ function VacanciesNew() {
   );
 }
 
-export default VacanciesNew;
+export default VacanciesEdit;

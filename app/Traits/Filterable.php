@@ -16,11 +16,15 @@ trait Filterable
         $orderBy = request('order_by', 'id');
         $orderDir = request('order_dir', 'desc');
         $filterValue = request('filter_value', null);
-        $filterField = explode(',', request('filter_field', null));
+        $filterFields = request('filter_field', null) ? explode(',', request('filter_field', '')) : [];
 
         if($filterValue) {
-            if($filterField && in_array($filterField, static::searchable())) {
-                $query->where($filterField, 'LIKE', "%$filterValue%");
+            if(count($filterFields) > 0) {
+                foreach($filterFields as $filterField) {
+                    if(in_array($filterField, static::searchable())) {
+                        $query->orWhere($filterField, 'LIKE', "%$filterValue%");
+                    }
+                }
             }
             else {
                 foreach(static::searchable() as $filter) {

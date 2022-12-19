@@ -21,18 +21,7 @@ import ListItemText from '@mui/material/ListItemText';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
 
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import { Link as RouterLink } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -144,14 +133,14 @@ function DashboardContent(props) {
         <Divider />
 
         <List component="nav">
-          <ListItemButton>
+          <ListItemButton component={RouterLink} to="/admin/vacancies">
             <ListItemIcon>
               <DashboardIcon />
             </ListItemIcon>
             <ListItemText primary="Vagas" />
           </ListItemButton>
 
-          <ListItemButton>
+          <ListItemButton component={RouterLink} to="/admin/candidates">
             <ListItemIcon>
               <PeopleIcon />
             </ListItemIcon>
