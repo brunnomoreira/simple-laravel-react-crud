@@ -1,32 +1,41 @@
 import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import FormControl from '@mui/material/FormControl';
+
+import { 
+  Box,
+  Link,
+  Grid,
+  Avatar,
+  Button,
+  Container,
+  TextField, 
+  Typography,
+  FormControl, 
+  CssBaseline,
+} from '@mui/material';
+
+import {
+  LockOutlined as LockOutlinedIcon
+} from "@mui/icons-material";
+
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 
-import HomeLayout from "../../layouts/Home";
-import { useMutation } from 'react-query';
 import { Controller, useForm } from 'react-hook-form';
-import { AuthContext } from '../../contexts/AuthContext';
-import api from '../../services/api';
-import { useApp } from '../../contexts/AppContext';
+
+import { useMutation } from 'react-query';
+
 import { toast } from 'react-toastify';
+
+import HomeLayout from "../../layouts/Home";
+import { AuthContext } from '../../contexts/AuthContext';
+import { useApp } from '../../contexts/AppContext';
+import api from '../../services/api';
+
 
 function Register() {
   const app = useApp();
   const navigate = useNavigate();
   const authContext = React.useContext(AuthContext);
-  const { register, handleSubmit, control, watch, formState: { errors } } = useForm({
+  const { handleSubmit, control, watch, formState: { errors } } = useForm({
     defaultValues: {
       name: '',
       email: '',

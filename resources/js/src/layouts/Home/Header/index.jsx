@@ -1,17 +1,23 @@
 import React from 'react';
-import Box from '@mui/material/Box';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Link from '@mui/material/Link';
-import Button from '@mui/material/Button';
+
+import { 
+  Box,
+  Link,
+  AppBar,
+  Button,
+  Toolbar
+} from '@mui/material';
+
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 import { useMutation } from 'react-query';
 
-import { AuthContext } from '../../../contexts/AuthContext';
-import api from '../../../services/api';
-import { useApp } from '../../../contexts/AppContext';
 import { toast } from 'react-toastify';
+
+import { AuthContext } from '../../../contexts/AuthContext';
+import { useApp } from '../../../contexts/AppContext';
+import api from '../../../services/api';
+
 
 function Header() {
   const app = useApp();
