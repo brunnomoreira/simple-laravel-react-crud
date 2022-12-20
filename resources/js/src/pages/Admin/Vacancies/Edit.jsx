@@ -21,11 +21,14 @@ import { Link as RouterLink, useNavigate, useParams } from "react-router-dom";
 
 import AdminLayout from "../../../layouts/Admin";
 import api from '../../../services/api';
+import { useApp } from '../../../contexts/AppContext';
 
 
 function VacanciesEdit() {
   const params = useParams();
   const navigate = useNavigate();
+  const app = useApp();
+
   const { reset, handleSubmit, control, formState: { errors } } = useForm({
     defaultValues: {
       name: '',
@@ -36,15 +39,29 @@ function VacanciesEdit() {
     }
   });
 
-  const query = useQuery('vacancy', async () => await api.getVacancy(params.id));
+  const query = useQuery({
+    queryKey: ['vacancy'],
+    queryFn: async () => await api.getVacancy(params.id),
+    refetchOnWindowFocus: false
+  });
 
   React.useEffect(() => {
-    if(query.status == 'success') {
-      reset(query.data);
+    if(query.isLoading || query.isFetching) {
+      app.setLoading(true);
     }
-  }, [query.status]);
+    else {
+      if(query.isSuccess) {
+        reset(query.data);
+      } 
+
+      app.setLoading(false);
+    }
+  }, [query.isLoading, query.isFetching, query.isSuccess]);
   
   const mutation = useMutation(async (data) => await api.updateVacancy(query.data.id, data), {
+    onMutate: variables => {
+      app.setLoading(true);
+    },
     onSuccess: data => {
       toast.success("Vaga atualizada com sucesso!");
       navigate("/admin/vacancies");
@@ -52,6 +69,9 @@ function VacanciesEdit() {
     onError: (error, variables, context) => {
       toast.success("Erro ao atualizar vaga");
       console.log(error);
+    },
+    onSettled: (data, error, variables, context) => {
+      app.setLoading(false);
     }
   });
 

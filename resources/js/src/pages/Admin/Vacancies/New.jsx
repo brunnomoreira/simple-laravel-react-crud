@@ -21,9 +21,11 @@ import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 import AdminLayout from "../../../layouts/Admin";
 import api from '../../../services/api';
+import { useApp } from '../../../contexts/AppContext';
 
 
 function VacanciesNew() {
+  const app = useApp();
   const navigate = useNavigate();
 
   const { handleSubmit, control, formState: { errors } } = useForm({
@@ -37,6 +39,9 @@ function VacanciesNew() {
   });
   
   const mutation = useMutation(api.createVacancy, {
+    onMutate: variables => {
+      app.setLoading(true);
+    },
     onSuccess: data => {
       toast.success("Vaga criada com sucesso!");
       navigate("/admin/vacancies");
@@ -44,6 +49,9 @@ function VacanciesNew() {
     onError: (error, variables, context) => {
       toast.success("Erro ao criar vaga");
       console.log(error);
+    },
+    onSettled: (data, error, variables, context) => {
+      app.setLoading(false);
     }
   });
 

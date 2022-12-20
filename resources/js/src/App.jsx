@@ -19,11 +19,12 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import VacanciesList from "./pages/Admin/Vacancies/List";
 import VacanciesNew from "./pages/Admin/Vacancies/New";
-import AuthContextProvider from "./contexts/AuthContext";
+import IndexContext from "./contexts/IndexContext";
 import { ToastContainer } from "react-toastify";
 
 import 'react-toastify/dist/ReactToastify.css';
 import VacanciesEdit from "./pages/Admin/Vacancies/Edit";
+import LoadingContainer from "./components/LoadingContainer";
 
 const router = createBrowserRouter([
   {
@@ -82,12 +83,14 @@ const App = () => {
   return (
     // <React.StrictMode>
       <QueryClientProvider client={queryClient}>
-        <AuthContextProvider>
+        <IndexContext>
           <ThemeProvider theme={theme}>
-            <RouterProvider router={router} />
+            <LoadingContainer>
+              <RouterProvider router={router} />
+            </LoadingContainer>
             <ToastContainer />
           </ThemeProvider>
-        </AuthContextProvider>
+        </IndexContext>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     // </React.StrictMode>
