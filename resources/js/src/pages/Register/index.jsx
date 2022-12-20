@@ -19,8 +19,11 @@ import { useMutation } from 'react-query';
 import { Controller, useForm } from 'react-hook-form';
 import { AuthContext } from '../../contexts/AuthContext';
 import api from '../../services/api';
+import { useApp } from '../../contexts/AppContext';
+import { toast } from 'react-toastify';
 
 function Register() {
+  const app = useApp();
   const navigate = useNavigate();
   const authContext = React.useContext(AuthContext);
   const { register, handleSubmit, control, watch, formState: { errors } } = useForm({
@@ -33,13 +36,19 @@ function Register() {
   });
 
   const mutation = useMutation(api.register, {
+    onMutate: variables => {
+      app.setLoading(true);
+    },
     onSuccess: data => {
       authContext.login(data);
       navigate("/");
     },
     onError: (error, variables, context) => {
-      console.log("Deu ruim");
+      toast.error("Erro ao cadastrar");
       console.log(error);
+    },
+    onSettled: (data, error, variables, context) => {
+      app.setLoading(false);
     }
   });
 

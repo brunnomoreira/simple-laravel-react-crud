@@ -16,22 +16,19 @@ import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 import { useForm, Controller } from "react-hook-form";
 
-import {
-  useQuery,
-  useMutation,
-  useQueryClient,
-  QueryClient,
-  QueryClientProvider,
-} from 'react-query'
+import { useMutation } from 'react-query'
 
 import HomeLayout from "../../layouts/Home";
 import api from '../../services/api';
 import { AuthContext } from '../../contexts/AuthContext';
+import { useApp } from '../../contexts/AppContext';
+import { toast } from 'react-toastify';
 
 function Login() {
+  const app = useApp();
   const navigate = useNavigate();
   const authContext = React.useContext(AuthContext);
-  const { register, handleSubmit, control, watch, formState: { errors } } = useForm({
+  const { handleSubmit, control, formState: { errors } } = useForm({
     defaultValues: {
       email: '',
       password: ''
@@ -39,21 +36,23 @@ function Login() {
   });
 
   const mutation = useMutation(api.login, {
+    onMutate: variables => {
+      app.setLoading(true);
+    },
     onSuccess: data => {
-      console.log("Deu bom");
-      console.log(data);
       authContext.login(data);
       navigate("/");
     },
     onError: (error, variables, context) => {
-      console.log("Deu ruim");
+      toast.error("Erro ao entrar");
       console.log(error);
+    },
+    onSettled: (data, error, variables, context) => {
+      app.setLoading(false);
     }
   });
 
   const onSubmit = (data) => {
-    console.log("Agora");
-    console.log(data);
     mutation.mutate(data);
   }
 

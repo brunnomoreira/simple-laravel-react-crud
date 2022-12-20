@@ -10,21 +10,28 @@ import { useMutation } from 'react-query';
 
 import { AuthContext } from '../../../contexts/AuthContext';
 import api from '../../../services/api';
+import { useApp } from '../../../contexts/AppContext';
+import { toast } from 'react-toastify';
 
 function Header() {
+  const app = useApp();
   const navigate = useNavigate();
   const authContext = React.useContext(AuthContext);
 
   const mutation = useMutation(api.logout, {
+    onMutate: variables => {
+      app.setLoading(true);
+    },
     onSuccess: data => {
-      console.log("Deu bom");
-      console.log(data);
       authContext.logout();
       navigate("/");
     },
     onError: (error, variables, context) => {
-      console.log("Deu ruim");
+      toast.error("Erro ao sair");
       console.log(error);
+    },
+    onSettled: (data, error, variables, context) => {
+      app.setLoading(false);
     }
   });
 
