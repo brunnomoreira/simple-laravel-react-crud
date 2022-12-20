@@ -50,6 +50,9 @@ const AuthContextProvider = (props) => {
   );
 }
 
-export { AuthContext };
+export { AuthContextProvider };
 
-export default AuthContextProvider;
+export const useAuth = () => {
+  const context = React.useContext(AuthContext)
+  return context
+}

@@ -28,15 +28,15 @@ import { useMutation } from 'react-query'
 import { toast } from 'react-toastify';
 
 import HomeLayout from "../../layouts/Home";
-import { AuthContext } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 import { useApp } from '../../contexts/AppContext';
 import api from '../../services/api';
 
 
 function Login() {
   const app = useApp();
+  const auth = useAuth();
   const navigate = useNavigate();
-  const authContext = React.useContext(AuthContext);
   const { handleSubmit, control, formState: { errors } } = useForm({
     defaultValues: {
       email: '',
@@ -49,7 +49,7 @@ function Login() {
       app.setLoading(true);
     },
     onSuccess: data => {
-      authContext.login(data);
+      auth.login(data);
       navigate("/");
     },
     onError: (error, variables, context) => {

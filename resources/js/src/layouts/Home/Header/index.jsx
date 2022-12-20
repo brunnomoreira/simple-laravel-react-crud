@@ -14,22 +14,22 @@ import { useMutation } from 'react-query';
 
 import { toast } from 'react-toastify';
 
-import { AuthContext } from '../../../contexts/AuthContext';
+import { useAuth } from '../../../contexts/AuthContext';
 import { useApp } from '../../../contexts/AppContext';
 import api from '../../../services/api';
 
 
 function Header() {
   const app = useApp();
+  const auth = useAuth();
   const navigate = useNavigate();
-  const authContext = React.useContext(AuthContext);
 
   const mutation = useMutation(api.logout, {
     onMutate: variables => {
       app.setLoading(true);
     },
     onSuccess: data => {
-      authContext.logout();
+      auth.logout();
       navigate("/");
     },
     onError: (error, variables, context) => {
@@ -42,12 +42,12 @@ function Header() {
   });
 
   const renderMenu = () => {
-    if(authContext.isLoading) {
+    if(auth.isLoading) {
       return null;
     }
 
-    if(authContext.isLoggedIn()) {
-      if(authContext.isAdmin()) {
+    if(auth.isLoggedIn()) {
+      if(auth.isAdmin()) {
         return (
           <>
             <Button component={RouterLink} to="/admin/vacancies" variant="text">Admin</Button>

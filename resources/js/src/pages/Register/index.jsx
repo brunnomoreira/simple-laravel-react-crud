@@ -26,15 +26,15 @@ import { useMutation } from 'react-query';
 import { toast } from 'react-toastify';
 
 import HomeLayout from "../../layouts/Home";
-import { AuthContext } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 import { useApp } from '../../contexts/AppContext';
 import api from '../../services/api';
 
 
 function Register() {
   const app = useApp();
+  const auth = useAuth();
   const navigate = useNavigate();
-  const authContext = React.useContext(AuthContext);
   const { handleSubmit, control, watch, formState: { errors } } = useForm({
     defaultValues: {
       name: '',
@@ -49,7 +49,7 @@ function Register() {
       app.setLoading(true);
     },
     onSuccess: data => {
-      authContext.login(data);
+      auth.login(data);
       navigate("/");
     },
     onError: (error, variables, context) => {
