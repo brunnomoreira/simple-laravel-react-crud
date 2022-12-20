@@ -1,25 +1,30 @@
 import * as React from 'react';
-import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import MuiDrawer from '@mui/material/Drawer';
-import Box from '@mui/material/Box';
-import MuiAppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-import Link from '@mui/material/Link';
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import PeopleIcon from '@mui/icons-material/People';
+import { 
+  Box,
+  List,
+  Link,
+  Toolbar,
+  Divider,
+  Container,
+  IconButton,
+  Typography,
+  CssBaseline,
+  ListItemIcon,
+  ListItemText,
+  ListItemButton,
+  Drawer as MuiDrawer,
+  AppBar as MuiAppBar
+} from '@mui/material';
+
+import {
+  ChevronLeft as ChevronLeftIcon,
+  Dashboard as DashboardIcon,
+  People as PeopleIcon,
+  Menu as MenuIcon,
+} from '@mui/icons-material';
+
+import { styled } from '@mui/material/styles';
 
 import { Link as RouterLink } from "react-router-dom";
 
@@ -117,14 +122,16 @@ function DashboardContent(props) {
             pr: [1],
           }}
         >
-          <Box
-            component="img"
-            sx={{
-              width: 100
-            }}
-            alt="Signo Web"
-            src="https://site.signoweb.com.br/assets/images/logo-signo.svg"
-          />
+          <Link component={RouterLink} to="/">
+            <Box
+              component="img"
+              sx={{
+                width: 100
+              }}
+              alt="Signo Web"
+              src="https://site.signoweb.com.br/assets/images/logo-signo.svg"
+            />
+          </Link>
           <IconButton onClick={toggleDrawer}>
             <ChevronLeftIcon />
           </IconButton>

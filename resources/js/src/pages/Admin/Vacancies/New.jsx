@@ -38,7 +38,7 @@ function VacanciesNew() {
     }
   });
   
-  const mutation = useMutation(api.vacancies.createVacancy, {
+  const mutation = useMutation(api.vacancies.create, {
     onMutate: variables => {
       app.setLoading(true);
     },

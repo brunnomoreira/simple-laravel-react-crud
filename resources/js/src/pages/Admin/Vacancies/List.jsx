@@ -46,7 +46,7 @@ function VacanciesList() {
   const query = useQuery({
     queryKey: ['vacancies', {page, rowsPerPage, sortColumn, sortOrder, searchText, searchColumns}],
     queryFn: async () => {
-      const response = await api.vacancies.getVacancies(page, rowsPerPage, sortColumn, sortOrder, searchText, searchColumns.join(','));
+      const response = await api.vacancies.list(page, rowsPerPage, sortColumn, sortOrder, searchText, searchColumns.join(','));
       return response;
     },
     keepPreviousData: true,
@@ -54,7 +54,7 @@ function VacanciesList() {
     refetchOnMount: false,
   });
 
-  const mutation = useMutation(async (id) => await api.vacancies.deleteVacancy(id) , {
+  const mutation = useMutation(async (id) => await api.vacancies.remove(id) , {
     onMutate: variables => {
       app.setLoading(true);
     },

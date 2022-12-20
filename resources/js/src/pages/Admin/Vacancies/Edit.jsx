@@ -41,7 +41,7 @@ function VacanciesEdit() {
 
   const query = useQuery({
     queryKey: ['vacancy'],
-    queryFn: async () => await api.vacancies.getVacancy(params.id),
+    queryFn: async () => await api.vacancies.find(params.id),
     refetchOnWindowFocus: false
   });
 
@@ -58,7 +58,7 @@ function VacanciesEdit() {
     }
   }, [query.isLoading, query.isFetching, query.isSuccess]);
   
-  const mutation = useMutation(async (data) => await api.vacancies.updateVacancy(query.data.id, data), {
+  const mutation = useMutation(async (data) => await api.vacancies.update(query.data.id, data), {
     onMutate: variables => {
       app.setLoading(true);
     },

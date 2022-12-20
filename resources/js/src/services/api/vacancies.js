@@ -1,9 +1,9 @@
-const getVacancy = async (id) => {
+const find = async (id) => {
   const { data: response } = await axios.get(`admin/vacancies/${id}`);
   return response.data;
 };
 
-const getVacancies = async(page, limit, order_by, order_dir, filter_value, filter_field) => {
+const list = async(page, limit, order_by, order_dir, filter_value, filter_field) => {
   const { data: response } = await axios.get('admin/vacancies', {
     params: {
       page,
@@ -18,25 +18,25 @@ const getVacancies = async(page, limit, order_by, order_dir, filter_value, filte
   return response;
 }
 
-const createVacancy = async (data) => {
+const create = async (data) => {
   const { data: response } = await axios.post('admin/vacancies', data);
   return response.data;
 };
 
-const updateVacancy = async (id, data) => {
+const update = async (id, data) => {
   const { data: response } = await axios.put(`admin/vacancies/${id}`, data);
   return response.data;
 };
 
-const deleteVacancy = async (id) => {
+const remove = async (id) => {
   const { data: response } = await axios.delete(`admin/vacancies/${id}`);
   return response.data;
 };
 
 export default {
-  getVacancy,
-  getVacancies,
-  createVacancy,
-  updateVacancy,
-  deleteVacancy
+  find,
+  list,
+  create,
+  update,
+  remove
 }
