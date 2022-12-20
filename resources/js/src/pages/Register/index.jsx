@@ -44,7 +44,7 @@ function Register() {
     }
   });
 
-  const mutation = useMutation(api.register, {
+  const mutation = useMutation(api.auth.register, {
     onMutate: variables => {
       app.setLoading(true);
     },

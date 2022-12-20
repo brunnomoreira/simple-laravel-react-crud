@@ -24,7 +24,7 @@ function Header() {
   const auth = useAuth();
   const navigate = useNavigate();
 
-  const mutation = useMutation(api.logout, {
+  const mutation = useMutation(api.auth.logout, {
     onMutate: variables => {
       app.setLoading(true);
     },

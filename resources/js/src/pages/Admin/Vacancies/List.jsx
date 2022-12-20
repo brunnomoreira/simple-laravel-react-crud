@@ -20,7 +20,6 @@ import { toast } from 'react-toastify';
 import AdminLayout from "../../../layouts/Admin";
 import DataTable from '../../../components/DataTable';
 import ConfirmationDialog from '../../../components/Dialogs/ConfirmationDialog';
-
 import api from '../../../services/api';
 
 
@@ -45,7 +44,7 @@ function VacanciesList() {
   const query = useQuery({
     queryKey: ['vacancies', {page, rowsPerPage, sortColumn, sortOrder, searchText, searchColumns}],
     queryFn: async () => {
-      const response = await api.getVacancies(page, rowsPerPage, sortColumn, sortOrder, searchText, searchColumns.join(','));
+      const response = await api.vacancies.getVacancies(page, rowsPerPage, sortColumn, sortOrder, searchText, searchColumns.join(','));
       return response;
     },
     keepPreviousData: true,
@@ -53,7 +52,7 @@ function VacanciesList() {
     refetchOnMount: false,
   });
 
-  const mutation = useMutation(async (id) => await api.deleteVacancy(id) , {
+  const mutation = useMutation(async (id) => await api.vacancies.deleteVacancy(id) , {
     onSuccess: data => {
       toast.success("Vaga removida com sucesso!");
       query.refetch();

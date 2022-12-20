@@ -20,8 +20,8 @@ import { useForm, Controller } from "react-hook-form";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 import AdminLayout from "../../../layouts/Admin";
-import api from '../../../services/api';
 import { useApp } from '../../../contexts/AppContext';
+import api from '../../../services/api';
 
 
 function VacanciesNew() {
@@ -38,7 +38,7 @@ function VacanciesNew() {
     }
   });
   
-  const mutation = useMutation(api.createVacancy, {
+  const mutation = useMutation(api.vacancies.createVacancy, {
     onMutate: variables => {
       app.setLoading(true);
     },

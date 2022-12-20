@@ -44,7 +44,7 @@ function Login() {
     }
   });
 
-  const mutation = useMutation(api.login, {
+  const mutation = useMutation(api.auth.login, {
     onMutate: variables => {
       app.setLoading(true);
     },

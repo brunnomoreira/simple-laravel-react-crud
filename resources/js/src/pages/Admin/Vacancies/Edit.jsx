@@ -20,8 +20,8 @@ import { useForm, Controller } from "react-hook-form";
 import { Link as RouterLink, useNavigate, useParams } from "react-router-dom";
 
 import AdminLayout from "../../../layouts/Admin";
-import api from '../../../services/api';
 import { useApp } from '../../../contexts/AppContext';
+import api from '../../../services/api';
 
 
 function VacanciesEdit() {
@@ -41,7 +41,7 @@ function VacanciesEdit() {
 
   const query = useQuery({
     queryKey: ['vacancy'],
-    queryFn: async () => await api.getVacancy(params.id),
+    queryFn: async () => await api.vacancies.getVacancy(params.id),
     refetchOnWindowFocus: false
   });
 
@@ -58,7 +58,7 @@ function VacanciesEdit() {
     }
   }, [query.isLoading, query.isFetching, query.isSuccess]);
   
-  const mutation = useMutation(async (data) => await api.updateVacancy(query.data.id, data), {
+  const mutation = useMutation(async (data) => await api.vacancies.updateVacancy(query.data.id, data), {
     onMutate: variables => {
       app.setLoading(true);
     },
