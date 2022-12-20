@@ -20,16 +20,20 @@ trait Filterable
 
         if($filterValue) {
             if(count($filterFields) > 0) {
-                foreach($filterFields as $filterField) {
-                    if(in_array($filterField, static::searchable())) {
-                        $query->orWhere($filterField, 'LIKE', "%$filterValue%");
+                $query->where(function($query) use ($filterFields, $filterValue) {
+                    foreach($filterFields as $filterField) {
+                        if(in_array($filterField, static::searchable())) {
+                            $query->orWhere($filterField, 'LIKE', "%$filterValue%");
+                        }
                     }
-                }
+                });
             }
             else {
-                foreach(static::searchable() as $filter) {
-                    $query->orWhere($filter, 'LIKE', "%$filterValue%");
-                }
+                $query->where(function($query) use ($filterValue) {
+                    foreach(static::searchable() as $filter) {
+                        $query->orWhere($filter, 'LIKE', "%$filterValue%");
+                    }
+                });
             }
         }
 

@@ -20,11 +20,12 @@ import { toast } from 'react-toastify';
 import AdminLayout from "../../../layouts/Admin";
 import DataTable from '../../../components/DataTable';
 import ConfirmationDialog from '../../../components/Dialogs/ConfirmationDialog';
-import api from '../../../services/api';
 import { useApp } from '../../../contexts/AppContext';
 
+import api from '../../../services/api';
 
-function VacanciesList() {
+
+function CandidatesList() {
   const app = useApp();
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
@@ -35,7 +36,7 @@ function VacanciesList() {
   const [searchText, setSearchText] = React.useState("");
   const [searchColumns, setSearchColumns] = React.useState([]);
 
-  const [selectedVacancyToDelete, setSelectedVacancyToDelete] = React.useState(null);
+  const [selectedCandidateToDelete, setSelectedCandidateToDelete] = React.useState(null);
 
   React.useEffect(() => {
     if(!query.isLoading || !query.isRefetching) {
@@ -44,9 +45,9 @@ function VacanciesList() {
   }, []);
 
   const query = useQuery({
-    queryKey: ['vacancies', {page, rowsPerPage, sortColumn, sortOrder, searchText, searchColumns}],
+    queryKey: ['candidates', {page, rowsPerPage, sortColumn, sortOrder, searchText, searchColumns}],
     queryFn: async () => {
-      const response = await api.vacancies.getVacancies(page, rowsPerPage, sortColumn, sortOrder, searchText, searchColumns.join(','));
+      const response = await api.candidates.list(page, rowsPerPage, sortColumn, sortOrder, searchText, searchColumns.join(','));
       return response;
     },
     keepPreviousData: true,
@@ -54,16 +55,16 @@ function VacanciesList() {
     refetchOnMount: false,
   });
 
-  const mutation = useMutation(async (id) => await api.vacancies.deleteVacancy(id) , {
+  const mutation = useMutation(async (id) => await api.candidates.remove(id) , {
     onMutate: variables => {
       app.setLoading(true);
     },
     onSuccess: data => {
-      toast.success("Vaga removida com sucesso!");
+      toast.success("Candidato removido com sucesso!");
       query.refetch();
     },
     onError: (error, variables, context) => {
-      toast.error("Erro ao remover vaga");
+      toast.error("Erro ao remover candidato");
       console.log(error);
     },
     onSettled: (data, error, variables, context) => {
@@ -74,8 +75,7 @@ function VacanciesList() {
   const columnsToSearch = [
     {value: 'id', label: 'ID'},
     {value: 'name', label: 'Nome'},
-    {value: 'type', label: 'Tipo'},
-    {value: 'status', label: 'Status'},
+    {value: 'email', label: 'Email'}
   ];
 
   const columns = [
@@ -96,30 +96,16 @@ function VacanciesList() {
       }
     },
     {
-      name: "type",
-      label: "Tipo",
+      name: "email",
+      label: "Email",
       options: {
         filter: true,
         sort: true,
-        customBodyRender: (value, tableMeta) => {
-          return query.data.data[tableMeta.rowIndex].type_description;
-        }
-      }
-    },
-    {
-      name: "status",
-      label: "Status",
-      options: {
-        filter: true,
-        sort: true,
-        customBodyRender: (value, tableMeta) => {
-          return query.data.data[tableMeta.rowIndex].status_description;
-        }
       }
     },
     {
       name: "created_at",
-      label: "Criada em",
+      label: "Criado em",
       options: {
         filter: true,
         sort: true,
@@ -155,27 +141,27 @@ function VacanciesList() {
   ];
 
   const handleOnClickNew = () => {
-    navigate('/admin/vacancies/new');
+    navigate('/admin/candidates/new');
   }
 
-  const handleOnClickUpdate = (vacancy) => {
-    navigate(`/admin/vacancies/edit/${vacancy.id}`);
+  const handleOnClickUpdate = (candidate) => {
+    navigate(`/admin/candidates/edit/${candidate.id}`);
   }
 
-  const handleOnClickDelete = (vacancy) => {
+  const handleOnClickDelete = (candidate) => {
     setOpen(true);
-    setSelectedVacancyToDelete(vacancy);
+    setSelectedCandidateToDelete(candidate);
   }
 
   const handleOnClickConfirmDelete = () => {
     setOpen(false);
-    mutation.mutate(selectedVacancyToDelete.id);
+    mutation.mutate(selectedCandidateToDelete.id);
   }
 
   return (
     <AdminLayout>
       <DataTable
-        title="Vagas"
+        title="Candidatos"
         query={query}
         columns={columns}
         onClickNew={handleOnClickNew}
@@ -199,4 +185,4 @@ function VacanciesList() {
   );
 }
 
-export default VacanciesList;
+export default CandidatesList;

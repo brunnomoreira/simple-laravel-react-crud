@@ -13,61 +13,40 @@ import {
 
 import { toast } from 'react-toastify';
 
-import { useMutation, useQuery } from 'react-query';
+import { useMutation } from 'react-query';
 
 import { useForm, Controller } from "react-hook-form";
 
-import { Link as RouterLink, useNavigate, useParams } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 import AdminLayout from "../../../layouts/Admin";
 import { useApp } from '../../../contexts/AppContext';
 import api from '../../../services/api';
 
 
-function VacanciesEdit() {
-  const params = useParams();
-  const navigate = useNavigate();
+function CandidatesNew() {
   const app = useApp();
+  const navigate = useNavigate();
 
-  const { reset, handleSubmit, control, formState: { errors } } = useForm({
+  const { handleSubmit, watch, control, formState: { errors } } = useForm({
     defaultValues: {
       name: '',
-      summary: '',
-      description: '',
-      type: 'clt',
-      status: 'open'
+      email: '',
+      password: '',
+      password_confirmation: ''
     }
   });
-
-  const query = useQuery({
-    queryKey: ['vacancy'],
-    queryFn: async () => await api.vacancies.getVacancy(params.id),
-    refetchOnWindowFocus: false
-  });
-
-  React.useEffect(() => {
-    if(query.isLoading || query.isFetching) {
-      app.setLoading(true);
-    }
-    else {
-      if(query.isSuccess) {
-        reset(query.data);
-      } 
-
-      app.setLoading(false);
-    }
-  }, [query.isLoading, query.isFetching, query.isSuccess]);
   
-  const mutation = useMutation(async (data) => await api.vacancies.updateVacancy(query.data.id, data), {
+  const mutation = useMutation(api.candidates.create, {
     onMutate: variables => {
       app.setLoading(true);
     },
     onSuccess: data => {
-      toast.success("Vaga atualizada com sucesso!");
-      navigate("/admin/vacancies");
+      toast.success("Candidato criado com sucesso!");
+      navigate("/admin/candidates");
     },
     onError: (error, variables, context) => {
-      toast.error("Erro ao atualizar vaga");
+      toast.error("Erro ao criar candidato");
       console.log(error);
     },
     onSettled: (data, error, variables, context) => {
@@ -84,7 +63,7 @@ function VacanciesEdit() {
       <Box sx={{ maxWidth: 600, width: '100%' }}>
         <Card>
           <CardContent>
-            <Typography variant="h6">Nova Vaga</Typography>
+            <Typography variant="h6">Novo Candidato</Typography>
             <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
               <FormControl fullWidth>
                 <Controller
@@ -106,16 +85,17 @@ function VacanciesEdit() {
               </FormControl>
               <FormControl fullWidth>
                 <Controller
-                  name="summary"
+                  name="email"
                   control={control}
                   rules={{ required: "Campo obrigatório" }}
                   render={({ field }) => (
                     <TextField
                       fullWidth
-                      label="Resumo*"
+                      type="email"
+                      label="Email*"
                       margin="normal"
-                      error={errors.summary ? true : false}
-                      helperText={errors.summary?.message}
+                      error={errors.email ? true : false}
+                      helperText={errors.email?.message}
                       {...field}
                     />
                   )}
@@ -123,18 +103,18 @@ function VacanciesEdit() {
               </FormControl>
               <FormControl fullWidth>
                 <Controller
-                  name="description"
+                  name="password"
                   control={control}
                   rules={{ required: "Campo obrigatório" }}
                   render={({ field }) => (
                     <TextField
                       fullWidth
-                      multiline
-                      rows={4}
-                      label="Descrição"
+                      label="Senha*"
                       margin="normal"
-                      error={errors.description ? true : false}
-                      helperText={errors.description?.message}
+                      type="password"
+                      autoComplete="new-password"
+                      error={errors.password ? true : false}
+                      helperText={errors.password?.message}
                       {...field}
                     />
                   )}
@@ -142,46 +122,35 @@ function VacanciesEdit() {
               </FormControl>
               <FormControl fullWidth>
                 <Controller
-                  name="type"
+                  name="password_confirmation"
                   control={control}
+                  rules={{ 
+                    required: "Campo obrigatório",
+                    validate: (val) => {
+                      if (watch('password') != val) {
+                        return "Confirmação de senha não corresponde a senha";
+                      }
+                    },
+                  }}
                   render={({ field }) => (
                     <TextField
-                      select
                       fullWidth
-                      label="Tipo"
+                      label="Confirme sua senha*"
                       margin="normal"
+                      type="password"
+                      autoComplete="new-password"
+                      error={errors.password_confirmation ? true : false}
+                      helperText={errors.password_confirmation?.message}
                       {...field}
-                    >
-                      <MenuItem value="clt">CLT</MenuItem>
-                      <MenuItem value="pessoa_juridica">Pessoa Jurídica</MenuItem>
-                      <MenuItem value="freelancer">Freelancer</MenuItem>
-                    </TextField>
+                    />
                   )}
                 />
               </FormControl>
-              <FormControl fullWidth>
-                <Controller
-                  name="status"
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      select
-                      fullWidth
-                      label="Status"
-                      margin="normal"
-                      {...field}
-                    >
-                      <MenuItem value="open">Aberta</MenuItem>
-                      <MenuItem value="paused">Pausada</MenuItem>
-                      <MenuItem value="closed">Fechada</MenuItem>
-                    </TextField>
-                  )}
-                />
-              </FormControl>
+
               <Box sx={{ mt: 3, mb: 2, display: 'flex', justifyContent: 'space-between' }}>
                 <Button
                   component={RouterLink} 
-                  to="/admin/vacancies"
+                  to="/admin/candidates"
                   color="secondary"
                   variant="contained"
                 >
@@ -191,7 +160,7 @@ function VacanciesEdit() {
                   type="submit"
                   variant="contained"
                 >
-                  Salvar
+                  Cadastrar
                 </Button>
               </Box>
             </Box>
@@ -202,4 +171,4 @@ function VacanciesEdit() {
   );
 }
 
-export default VacanciesEdit;
+export default CandidatesNew;

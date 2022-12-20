@@ -1,81 +1,27 @@
 import React from "react";
 
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
+import { RouterProvider } from "react-router-dom";
 
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
 
 import {
   QueryClient,
   QueryClientProvider,
 } from 'react-query'
 
-import { ReactQueryDevtools } from "react-query/devtools";
-
-import Home from './pages/Home';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import VacanciesList from "./pages/Admin/Vacancies/List";
-import VacanciesNew from "./pages/Admin/Vacancies/New";
-import IndexContext from "./contexts/IndexContext";
 import { ToastContainer } from "react-toastify";
 
+import { ReactQueryDevtools } from "react-query/devtools";
+
+import IndexContext from "./contexts/IndexContext";
+
 import 'react-toastify/dist/ReactToastify.css';
-import VacanciesEdit from "./pages/Admin/Vacancies/Edit";
+
 import LoadingContainer from "./components/LoadingContainer";
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Home />,
-  },
-  {
-    path: "/login",
-    element: <Login />,
-  },
-  {
-    path: "/register",
-    element: <Register />,
-  },
-  {
-    path: "/admin",
-    children: [
-      {
-        path: "vacancies",
-        element: <VacanciesList />,
-      },
-      {
-        path: "vacancies/new",
-        element: <VacanciesNew />,
-      },
-      {
-        path: "vacancies/edit/:id",
-        element: <VacanciesEdit />,
-      },
-      {
-        path: "candidates",
-        element: <VacanciesList />,
-      },
-      {
-        path: "candidates/new",
-        element: <VacanciesNew />,
-      },
-    ],
-  },
-]);
+import router from "./services/router";
+import theme from "./services/theme";
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#da1a2c'
-    },
-    secondary: {
-      main: '#da1a2c'
-    }
-  }
-});
 
 const queryClient = new QueryClient();
 
