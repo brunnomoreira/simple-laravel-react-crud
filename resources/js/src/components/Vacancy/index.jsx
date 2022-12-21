@@ -20,9 +20,9 @@ import { toast } from 'react-toastify';
 
 import { useMutation } from 'react-query';
 
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '@contexts/AuthContext';
 
-import api from '../../services/api';
+import api from '@services/api';
 
 
 

@@ -15,13 +15,15 @@ import { toast } from 'react-toastify';
 
 import { useMutation, useQuery } from 'react-query';
 
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller } from 'react-hook-form';
 
-import { Link as RouterLink, useNavigate, useParams } from "react-router-dom";
+import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
 
-import AdminLayout from "../../../layouts/Admin";
-import { useApp } from '../../../contexts/AppContext';
-import api from '../../../services/api';
+import AdminLayout from '@layouts/Admin';
+
+import { useApp } from '@contexts/AppContext';
+
+import api from '@services/api';
 
 
 function VacanciesEdit() {

@@ -1,7 +1,5 @@
 import React from 'react';
 
-import { useNavigate } from "react-router-dom";
-
 import { 
   Box,
   Tooltip, 
@@ -13,16 +11,20 @@ import {
   Delete as DeleteIcon
 } from "@mui/icons-material";
 
+import { useNavigate } from 'react-router-dom';
+
 import { useQuery, useMutation } from 'react-query';
 
 import { toast } from 'react-toastify';
 
-import AdminLayout from "../../../layouts/Admin";
-import DataTable from '../../../components/DataTable';
-import ConfirmationDialog from '../../../components/Dialogs/ConfirmationDialog';
-import { useApp } from '../../../contexts/AppContext';
+import AdminLayout from '@layouts/Admin';
 
-import api from '../../../services/api';
+import DataTable from '@components/DataTable';
+import ConfirmationDialog from '@components/Dialogs/ConfirmationDialog';
+
+import { useApp } from '@contexts/AppContext';
+
+import api from '@services/api';
 
 
 function CandidatesList() {

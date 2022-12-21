@@ -10,4 +10,14 @@ export default defineConfig({
         }),
         react(),
     ],
+    resolve: {
+        alias: {
+            '@': '/resources/js',
+            '@components': '/resources/js/src/components',
+            '@contexts': '/resources/js/src/contexts',
+            '@services': '/resources/js/src/services',
+            '@layouts': '/resources/js/src/layouts',
+            '@pages': '/resources/js/src/pages',
+        }
+    }
 });

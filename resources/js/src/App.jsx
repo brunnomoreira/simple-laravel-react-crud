@@ -13,14 +13,15 @@ import { ToastContainer } from "react-toastify";
 
 import { ReactQueryDevtools } from "react-query/devtools";
 
-import IndexContext from "./contexts/IndexContext";
-
 import 'react-toastify/dist/ReactToastify.css';
 
-import LoadingContainer from "./components/LoadingContainer";
+import IndexContext from "@contexts/IndexContext";
 
-import router from "./services/router";
-import theme from "./services/theme";
+import LoadingContainer from "@components/LoadingContainer";
+
+import router from "@services/router";
+
+import theme from "@services/theme";
 
 
 const queryClient = new QueryClient();

@@ -4,7 +4,6 @@ import Typography from '@mui/material/Typography';
 
 import Container from './Container';
 
-//const backgroundImage = 'https://images.unsplash.com/photo-1534854638093-bada1813ca19?auto=format&fit=crop&w=1400';
 const backgroundImage = "../../../../images/banner-home.jpg";
 
 function BannerHome() {
@@ -40,10 +39,10 @@ function BannerHome() {
         href="/premium-themes/onepirate/sign-up/"
         sx={{ minWidth: 200 }}
       >
-        Cadastre-se
+        Descubra
       </Button>
       <Typography variant="body2" color="inherit" sx={{ mt: 2 }}>
-        Descubra um novo mundo
+        Oportunidade para todos
       </Typography>
     </Container>
   );

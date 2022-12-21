@@ -15,12 +15,13 @@ import SearchIcon from '@mui/icons-material/Search';
 
 import { useInfiniteQuery } from 'react-query';
 
-import HomeLayout from "../../layouts/Home";
-import BannerHome from '../../components/BannerHome';
+import HomeLayout from "@layouts/Home";
+import Vacancy from '@components/Vacancy';
+import BannerHome from '@components/BannerHome';
 
-import api from '../../services/api';
-import Vacancy from '../../components/Vacancy';
-import { useAuth } from '../../contexts/AuthContext';
+import api from '@services/api';
+
+import { useAuth } from '@contexts/AuthContext';
 
 
 function Home() {

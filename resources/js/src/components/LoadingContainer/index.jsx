@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Box, CircularProgress } from '@mui/material';
 
-import { useApp } from '../../contexts/AppContext';
+import { useApp } from '@contexts/AppContext';
 
 const Loading = (props) => {
   const app = useApp();
@@ -27,7 +27,7 @@ const Loading = (props) => {
         zIndex: 9999,
         display: app.loading ? 'flex' : 'none',
       }}>
-        <CircularProgress />
+        <CircularProgress sx={{color: '#FFF'}}/>
       </Box>
       {props.children}
     </Box>

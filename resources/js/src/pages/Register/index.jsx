@@ -25,10 +25,12 @@ import { useMutation } from 'react-query';
 
 import { toast } from 'react-toastify';
 
-import HomeLayout from "../../layouts/Home";
-import { useAuth } from '../../contexts/AuthContext';
-import { useApp } from '../../contexts/AppContext';
-import api from '../../services/api';
+import HomeLayout from "@layouts/Home";
+
+import { useAuth } from '@contexts/AuthContext';
+import { useApp } from '@contexts/AppContext';
+
+import api from '@services/api';
 
 
 function Register() {

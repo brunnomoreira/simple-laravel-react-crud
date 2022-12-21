@@ -14,9 +14,10 @@ import { useMutation } from 'react-query';
 
 import { toast } from 'react-toastify';
 
-import { useAuth } from '../../../contexts/AuthContext';
-import { useApp } from '../../../contexts/AppContext';
-import api from '../../../services/api';
+import { useAuth } from '@contexts/AuthContext';
+import { useApp } from '@contexts/AppContext';
+
+import api from '@services/api';
 
 
 function Header() {
