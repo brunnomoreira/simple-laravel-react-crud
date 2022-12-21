@@ -84,7 +84,7 @@ function VacanciesEdit() {
       <Box sx={{ maxWidth: 600, width: '100%' }}>
         <Card>
           <CardContent>
-            <Typography variant="h6">Nova Vaga</Typography>
+            <Typography variant="h6">Atualizar Vaga</Typography>
             <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
               <FormControl fullWidth>
                 <Controller

@@ -11,7 +11,8 @@ const Loading = (props) => {
     <Box sx={{
       height: '100vh',
       position: 'relative',
-      overflowY: app.loading ? 'hidden' : 'auto'
+      overflowY: app.loading ? 'hidden' : 'auto',
+      paddingRight: app.loading ? '17px' : '0'
     }}>
       <Box sx={{
         position: 'fixed', 
@@ -26,7 +27,7 @@ const Loading = (props) => {
         zIndex: 9999,
         display: app.loading ? 'flex' : 'none',
       }}>
-        <CircularProgress sx={{color: '#FFF'}} />
+        <CircularProgress />
       </Box>
       {props.children}
     </Box>
