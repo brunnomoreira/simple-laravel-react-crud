@@ -16,6 +16,9 @@ class VacancyResource extends JsonResource
      */
     public function toArray($request)
     {
+        /**@var $user User */
+        $user = auth()->user();
+
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -26,6 +29,7 @@ class VacancyResource extends JsonResource
             'status' => $this->status,
             'status_description' => VacancyStatus::from($this->status)->description(),
             'created_at' => $this->created_at,
+            'applied' => $user && $user->candidacies()->where('vacancy_id', $this->id)->exists()
         ];
     }
 }

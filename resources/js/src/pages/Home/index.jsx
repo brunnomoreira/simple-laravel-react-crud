@@ -3,13 +3,9 @@ import React from 'react';
 import {
   Box,
   Grid,
-  Card,
-  Button,
   TextField,
   Container,
   Typography,
-  CardActions,
-  CardContent,
   CircularProgress
 } from '@mui/material';
 
@@ -24,9 +20,11 @@ import BannerHome from '../../components/BannerHome';
 
 import api from '../../services/api';
 import Vacancy from '../../components/Vacancy';
+import { useAuth } from '../../contexts/AuthContext';
 
 
 function Home() {
+  const auth = useAuth();
   const observerElem = React.useRef(null);
   const [searchText, setSearchText] = React.useState("");
 
@@ -60,6 +58,9 @@ function Home() {
     return () => observer.unobserve(element)
   }, [query.fetchNextPage, query.hasNextPage, handleObserver]);
 
+  React.useEffect(() => {
+    query.refetch();
+  }, [auth.user]);
 
   const renderVacancies = () => {
     if(query.isSuccess) {

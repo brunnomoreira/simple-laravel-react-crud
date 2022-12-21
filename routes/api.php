@@ -3,8 +3,8 @@
 use App\Http\Controllers\Api\V1\Admin\CandidateController;
 use App\Http\Controllers\Api\V1\Admin\VacancyController;
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\CandidaciesController;
 use App\Http\Controllers\Api\V1\HomeController;
-use App\Http\Controllers\Api\V1\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -33,9 +33,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::resource('candidates', CandidateController::class)->except(['create', 'edit']);
     });
 
-    Route::prefix('candidates')->group(function () {
-        Route::get('candidacies', [UserController::class, 'candidacies']);
-        Route::get('candidacies/{vacancy}/apply-candidacy', [UserController::class, 'applyCandidacy']);
-        Route::get('candidacies/{vacancy}/remove-candidacy', [UserController::class, 'removeCandidacy']);
+    Route::prefix('candidacies')->group(function () {
+        Route::get('/', [CandidaciesController::class, 'index']);
+        Route::post('/{vacancy}', [CandidaciesController::class, 'create']);
+        Route::delete('/{vacancy}', [CandidaciesController::class, 'destroy']);
     });
 });
