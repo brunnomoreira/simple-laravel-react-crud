@@ -61,7 +61,7 @@ const Vacancy = ({vacancy}) => {
       mutationApply.mutate();
     }
     else {
-      toast.warning("É necessário se autenticar para poder se candidatar para uma vaga.");
+      toast.warning("É necessário se autenticar para poder se candidatar à uma vaga.");
     }
   }
 

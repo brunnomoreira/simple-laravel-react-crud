@@ -36,7 +36,7 @@ function BannerHome() {
         variant="contained"
         size="large"
         component="a"
-        href="/premium-themes/onepirate/sign-up/"
+        href="#content"
         sx={{ minWidth: 200 }}
       >
         Descubra

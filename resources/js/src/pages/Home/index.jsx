@@ -79,6 +79,28 @@ function Home() {
     }
   }
 
+  const renderFooter = () => {
+    if(query.isFetching || (query.isFetchingNextPage && query.hasNextPage)) {
+      return <CircularProgress />;
+    }
+    else {
+      if(query.data && query.data.pages && query.data.pages.length > 0 && query.data.pages[0].data.length > 0) {
+        return (
+          <Typography variant="subtitle2" gutterBottom>
+            Não há mais vagas disponíveis
+          </Typography>
+        );
+      }
+      else {
+        return (
+          <Typography variant="subtitle2" gutterBottom>
+            Nenhuma vaga encontrada
+          </Typography>
+        );
+      }
+    }
+  }
+
   const handleOnSubmitSearch = (event) => {
     event.preventDefault();
     setSearchText(event.target.elements.search.value);
@@ -89,43 +111,38 @@ function Home() {
       <Box>
         <BannerHome />
 
-        <Container 
-          component="form" 
-          maxWidth="sm" 
-          sx={{ pt: 8, display: 'flex' }}
-          onSubmit={handleOnSubmitSearch}
-        >
-          <TextField 
-            fullWidth
-            name="search" 
-            label="Busque uma vaga" 
-            variant="outlined"
-          />
-          <LoadingButton 
-            type="submit"
-            variant="contained" 
-            startIcon={<SearchIcon />}
-            loadingPosition="start"
-            loading={query.isRefetching}
-            sx={{ width: 200, ml: 2 }}
+        <Box component="section" id="content">
+          <Container 
+            component="form" 
+            maxWidth="sm" 
+            sx={{ pt: '100px', display: 'flex' }}
+            onSubmit={handleOnSubmitSearch}
           >
-            Buscar
-          </LoadingButton>
-        </Container>
+            <TextField 
+              fullWidth
+              name="search" 
+              label="Busque uma vaga" 
+              variant="outlined"
+            />
+            <LoadingButton 
+              type="submit"
+              variant="contained" 
+              startIcon={<SearchIcon />}
+              loadingPosition="start"
+              loading={query.isRefetching}
+              sx={{ width: 200, ml: 2 }}
+            >
+              Buscar
+            </LoadingButton>
+          </Container>
 
-        <Container sx={{ py: 8 }} maxWidth="md">
-          { renderVacancies() }
-          <Box ref={observerElem} sx={{display: 'flex', justifyContent: 'center', pt: '50px', pb: '30px'}}>
-            {
-              query.isFetching || (query.isFetchingNextPage && query.hasNextPage) ? 
-                <CircularProgress />
-                : 
-                <Typography variant="subtitle2" gutterBottom>
-                  Não há mais vagas disponíveis
-                </Typography>
-            }
-          </Box>
-        </Container>
+          <Container sx={{ py: 8 }} maxWidth="md">
+            { renderVacancies() }
+            <Box ref={observerElem} sx={{display: 'flex', justifyContent: 'center', pt: '50px', pb: '30px'}}>
+              { renderFooter() }
+            </Box>
+          </Container>
+        </Box>
       </Box>
     </HomeLayout>
   );

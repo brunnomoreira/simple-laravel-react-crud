@@ -11,8 +11,8 @@ const Loading = (props) => {
     <Box sx={{
       height: '100vh',
       position: 'relative',
-      overflowY: app.loading ? 'hidden' : 'auto',
-      paddingRight: app.loading ? '17px' : '0'
+      scrollBehavior: 'smooth',
+      overflowY: app.loading ? 'hidden' : 'auto'
     }}>
       <Box sx={{
         position: 'fixed', 
