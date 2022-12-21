@@ -32,7 +32,7 @@ const Vacancy = ({vacancy}) => {
 
   React.useEffect(() => {
     setApplied(vacancy.applied);
-  }, [vacancy.applied]);
+  }, [vacancy.applied, auth.user]);
 
   const mutationApply = useMutation(async () => await api.candidacies.create(vacancy.id) , {
     onSuccess: data => {

@@ -14,7 +14,7 @@ const Loading = (props) => {
       overflowY: app.loading ? 'hidden' : 'auto'
     }}>
       <Box sx={{
-        position: 'absolute', 
+        position: 'fixed', 
         top: 0, 
         bottom: 0, 
         left: 0, 
