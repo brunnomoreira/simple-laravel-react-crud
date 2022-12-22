@@ -55,7 +55,7 @@ function Register() {
       navigate("/");
     },
     onError: (error, variables, context) => {
-      toast.error("Erro ao cadastrar");
+      toast.error("Erro ao cadastrar, verique se os dados fornecidos estão corretos");
       console.log(error);
     },
     onSettled: (data, error, variables, context) => {
