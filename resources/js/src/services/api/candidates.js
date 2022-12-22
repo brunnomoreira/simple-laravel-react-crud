@@ -28,10 +28,11 @@ const update = async (id, data) => {
   return response.data;
 };
 
-const remove = async (id) => {
-  const { data: response } = await axios.delete(`admin/candidates/${id}`);
+const remove = async (candidates) => {
+  const { data: response } = await axios.post(`admin/candidates/bulk-delete`, {candidates});
   return response.data;
 };
+
 
 export default {
   find,

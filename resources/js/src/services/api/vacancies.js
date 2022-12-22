@@ -28,8 +28,8 @@ const update = async (id, data) => {
   return response.data;
 };
 
-const remove = async (id) => {
-  const { data: response } = await axios.delete(`admin/vacancies/${id}`);
+const remove = async (vacancies) => {
+  const { data: response } = await axios.post(`admin/vacancies/bulk-delete`, {vacancies});
   return response.data;
 };
 

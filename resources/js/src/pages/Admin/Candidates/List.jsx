@@ -38,7 +38,7 @@ function CandidatesList() {
   const [searchText, setSearchText] = React.useState("");
   const [searchColumns, setSearchColumns] = React.useState([]);
 
-  const [selectedCandidateToDelete, setSelectedCandidateToDelete] = React.useState(null);
+  const [selectedIdsToDelete, setSelectedIdsToDelete] = React.useState([]);
 
   React.useEffect(() => {
     if(!query.isLoading || !query.isRefetching) {
@@ -57,12 +57,12 @@ function CandidatesList() {
     refetchOnMount: false,
   });
 
-  const mutation = useMutation(async (id) => await api.candidates.remove(id) , {
+  const mutation = useMutation(async (ids) => await api.candidates.remove(ids) , {
     onMutate: variables => {
       app.setLoading(true);
     },
     onSuccess: data => {
-      toast.success("Candidato removido com sucesso!");
+      toast.success(selectedIdsToDelete.length > 1 ? "Candidatos removidos com sucesso!" : "Candidato removido com sucesso!");
       query.refetch();
     },
     onError: (error, variables, context) => {
@@ -152,12 +152,17 @@ function CandidatesList() {
 
   const handleOnClickDelete = (candidate) => {
     setOpen(true);
-    setSelectedCandidateToDelete(candidate);
+    setSelectedIdsToDelete([candidate.id]);
   }
 
   const handleOnClickConfirmDelete = () => {
     setOpen(false);
-    mutation.mutate(selectedCandidateToDelete.id);
+    mutation.mutate(selectedIdsToDelete);
+  }
+
+  const handleOnClickBulkDelete = (indexes) => {
+    setOpen(true);
+    setSelectedIdsToDelete(indexes.map(index => query.data.data[index].id));
   }
 
   return (
@@ -167,6 +172,7 @@ function CandidatesList() {
         query={query}
         columns={columns}
         onClickNew={handleOnClickNew}
+        onClickBulDelete={handleOnClickBulkDelete}
         columnsToSearch={columnsToSearch}
         setPage={setPage}
         rowsPerPage={rowsPerPage}

@@ -17,7 +17,8 @@ import {
 } from '@mui/material';
 
 import {
-  Add as AddIcon
+  Add as AddIcon,
+  Delete as DeleteIcon
 } from "@mui/icons-material";
 
 import MUIDataTable from "mui-datatables";
@@ -35,7 +36,8 @@ function DataTable({
   setSortOrder,
   setSortColumn,
   setSearchText,
-  setSearchColumns
+  setSearchColumns,
+  onClickBulDelete
 }) {
   const [searchTextTemp, setSearchTextTemp] = React.useState("");
   const [searchColumnsTemp, setSearchColumnsTemp] = React.useState([]);
@@ -119,6 +121,20 @@ function DataTable({
     onChangeRowsPerPage: (numberOfRows) => {
       setPage(1)
       setRowsPerPage(numberOfRows);
+    },
+    customToolbarSelect: (selectedRows, displayData, setSelectedRows) => {
+      return (
+        <Box sx={{mr: '24px'}}>
+          <Tooltip 
+            title="Remover items selecionados"
+            onClick={() => {onClickBulDelete(Object.keys(selectedRows.lookup))}}
+          >
+            <IconButton>
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
+        </Box>
+      );
     }
   };
 

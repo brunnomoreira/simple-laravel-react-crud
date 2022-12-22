@@ -29,8 +29,11 @@ Route::prefix('auth')->group(function () {
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::prefix('admin')->middleware(['role:admin'])->group(function () {
-        Route::resource('vacancies', VacancyController::class)->except(['create', 'edit']);
-        Route::resource('candidates', CandidateController::class)->except(['create', 'edit']);
+        Route::resource('vacancies', VacancyController::class)->except(['create', 'edit', 'destroy']);
+        Route::resource('candidates', CandidateController::class)->except(['create', 'edit', 'destroy']);
+
+        Route::post('vacancies/bulk-delete', [VacancyController::class, 'destroy']);
+        Route::post('candidates/bulk-delete', [CandidateController::class, 'destroy']);      
     });
 
     Route::prefix('candidacies')->group(function () {

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\V1\Admin;
 
 use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CandidateBulkDelete;
+use App\Http\Requests\CandidateDeleteRequest;
 use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
@@ -69,9 +71,10 @@ class CandidateController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(CandidateDeleteRequest $request)
     {
-        User::candidates()->findOrFail($id)->delete();
+        $data = $request->validated();
+        User::destroy($data['candidates']);
         return response()->json(null, JsonResponse::HTTP_NO_CONTENT);
     }
 }

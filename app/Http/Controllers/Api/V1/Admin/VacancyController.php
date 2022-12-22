@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Api\V1\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\VacancyBulkDelete;
+use App\Http\Requests\VacancyDelete;
+use App\Http\Requests\VacancyDeleteRequest;
 use App\Http\Requests\VacancyRequest;
 use App\Http\Resources\VacancyCollection;
 use App\Http\Resources\VacancyResource;
@@ -58,14 +61,15 @@ class VacancyController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specifieds resource from storage.
      *
-     * @param  int  $id
+     * @param  array  $ids
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(VacancyDeleteRequest $request)
     {
-        Vacancy::findOrFail($id)->delete();
+        $data = $request->validated();
+        Vacancy::destroy($data['vacancies']);
         return response()->json(null, JsonResponse::HTTP_NO_CONTENT);
     }
 }
