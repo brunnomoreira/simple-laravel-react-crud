@@ -25,54 +25,15 @@ import ConfirmationDialog from '@components/Dialogs/ConfirmationDialog';
 import { useApp } from '@contexts/AppContext';
 
 import api from '@services/api';
+import usePagination from '@hooks/usePagination';
 
 
 function CandidatesList() {
-  const app = useApp();
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
-  const [page, setPage] = React.useState(1);
-  const [rowsPerPage, setRowsPerPage] = React.useState(20);
-  const [sortOrder, setSortOrder] = React.useState("desc");
-  const [sortColumn, setSortColumn] = React.useState("id");
-  const [searchText, setSearchText] = React.useState("");
-  const [searchColumns, setSearchColumns] = React.useState([]);
 
-  const [selectedIdsToDelete, setSelectedIdsToDelete] = React.useState([]);
+  const pagination = usePagination(api.candidates);
 
-  React.useEffect(() => {
-    if(!query.isLoading || !query.isRefetching) {
-      query.refetch();
-    }
-  }, []);
-
-  const query = useQuery({
-    queryKey: ['candidates', {page, rowsPerPage, sortColumn, sortOrder, searchText, searchColumns}],
-    queryFn: async () => {
-      const response = await api.candidates.list(page, rowsPerPage, sortColumn, sortOrder, searchText, searchColumns.join(','));
-      return response;
-    },
-    keepPreviousData: true,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-  });
-
-  const mutation = useMutation(async (ids) => await api.candidates.remove(ids) , {
-    onMutate: variables => {
-      app.setLoading(true);
-    },
-    onSuccess: data => {
-      toast.success(selectedIdsToDelete.length > 1 ? "Candidatos removidos com sucesso!" : "Candidato removido com sucesso!");
-      query.refetch();
-    },
-    onError: (error, variables, context) => {
-      toast.error("Erro ao remover candidato");
-      console.log(error);
-    },
-    onSettled: (data, error, variables, context) => {
-      app.setLoading(false);
-    }
-  });
 
   const columnsToSearch = [
     {value: 'id', label: 'ID'},
@@ -126,12 +87,12 @@ function CandidatesList() {
           return (
             <Box>
               <Tooltip title="Editar">
-                <IconButton onClick={() => handleOnClickUpdate(query.data.data[tableMeta.rowIndex])}>
+                <IconButton onClick={() => handleOnClickUpdate(pagination.query.data.data[tableMeta.rowIndex])}>
                   <EditIcon />
                 </IconButton>
               </Tooltip>
               <Tooltip title="Remover">
-                <IconButton onClick={() => handleOnClickDelete(query.data.data[tableMeta.rowIndex])}>
+                <IconButton onClick={() => handleOnClickDelete(pagination.query.data.data[tableMeta.rowIndex])}>
                   <DeleteIcon />
                 </IconButton>
               </Tooltip>
@@ -152,35 +113,35 @@ function CandidatesList() {
 
   const handleOnClickDelete = (candidate) => {
     setOpen(true);
-    setSelectedIdsToDelete([candidate.id]);
+    pagination.setSelectedIdsToDelete([candidate.id]);
   }
 
   const handleOnClickConfirmDelete = () => {
     setOpen(false);
-    mutation.mutate(selectedIdsToDelete);
+    pagination.mutation.mutate(pagination.selectedIdsToDelete);
   }
 
   const handleOnClickBulkDelete = (indexes) => {
     setOpen(true);
-    setSelectedIdsToDelete(indexes.map(index => query.data.data[index].id));
+    pagination.setSelectedIdsToDelete(indexes.map(index => pagination.query.data.data[index].id));
   }
 
   return (
     <AdminLayout>
       <DataTable
         title="Candidatos"
-        query={query}
+        query={pagination.query}
         columns={columns}
         onClickNew={handleOnClickNew}
         onClickBulDelete={handleOnClickBulkDelete}
         columnsToSearch={columnsToSearch}
-        setPage={setPage}
-        rowsPerPage={rowsPerPage}
-        setRowsPerPage={setRowsPerPage}
-        setSortOrder={setSortOrder}
-        setSortColumn={setSortColumn}
-        setSearchText={setSearchText}
-        setSearchColumns={setSearchColumns}
+        setPage={pagination.setPage}
+        rowsPerPage={pagination.rowsPerPage}
+        setRowsPerPage={pagination.setRowsPerPage}
+        setSortOrder={pagination.setSortOrder}
+        setSortColumn={pagination.setSortColumn}
+        setSearchText={pagination.setSearchText}
+        setSearchColumns={pagination.setSearchColumns}
       />
       <ConfirmationDialog
         open={open}

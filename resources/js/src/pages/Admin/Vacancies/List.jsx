@@ -25,54 +25,12 @@ import ConfirmationDialog from '@components/Dialogs/ConfirmationDialog';
 import { useApp } from '@contexts/AppContext';
 
 import api from '@services/api';
+import withDatatable from '../../../hocs/withDatatable';
 
 
-function VacanciesList() {
-  const app = useApp();
-  const navigate = useNavigate();
-  const [open, setOpen] = React.useState(false);
-  const [page, setPage] = React.useState(1);
-  const [rowsPerPage, setRowsPerPage] = React.useState(20);
-  const [sortOrder, setSortOrder] = React.useState("desc");
-  const [sortColumn, setSortColumn] = React.useState("id");
-  const [searchText, setSearchText] = React.useState("");
-  const [searchColumns, setSearchColumns] = React.useState([]);
-
-  const [selectedIdsToDelete, setSelectedIdsToDelete] = React.useState([]);
-
-  React.useEffect(() => {
-    if(!query.isLoading || !query.isRefetching) {
-      query.refetch();
-    }
-  }, []);
-
-  const query = useQuery({
-    queryKey: ['vacancies', {page, rowsPerPage, sortColumn, sortOrder, searchText, searchColumns}],
-    queryFn: async () => {
-      const response = await api.vacancies.list(page, rowsPerPage, sortColumn, sortOrder, searchText, searchColumns.join(','));
-      return response;
-    },
-    keepPreviousData: true,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-  });
-
-  const mutation = useMutation(async (ids) => await api.vacancies.remove(ids) , {
-    onMutate: variables => {
-      app.setLoading(true);
-    },
-    onSuccess: data => {
-      toast.success(selectedIdsToDelete.length > 1 ? "Vagas removidas com sucesso!" : "Vaga removida com sucesso!");
-      query.refetch();
-    },
-    onError: (error, variables, context) => {
-      toast.error("Erro ao remover vaga");
-      console.log(error);
-    },
-    onSettled: (data, error, variables, context) => {
-      app.setLoading(false);
-    }
-  });
+function VacanciesList(props) {
+  console.log("Aqui");
+  console.log(props);
 
   const columnsToSearch = [
     {value: 'id', label: 'ID'},
@@ -105,7 +63,7 @@ function VacanciesList() {
         filter: true,
         sort: true,
         customBodyRender: (value, tableMeta) => {
-          return query.data.data[tableMeta.rowIndex].type_description;
+          return props.query.data.data[tableMeta.rowIndex].type_description;
         }
       }
     },
@@ -116,7 +74,7 @@ function VacanciesList() {
         filter: true,
         sort: true,
         customBodyRender: (value, tableMeta) => {
-          return query.data.data[tableMeta.rowIndex].status_description;
+          return props.query.data.data[tableMeta.rowIndex].status_description;
         }
       }
     },
@@ -141,12 +99,12 @@ function VacanciesList() {
           return (
             <Box>
               <Tooltip title="Editar">
-                <IconButton onClick={() => handleOnClickUpdate(query.data.data[tableMeta.rowIndex])}>
+                <IconButton onClick={() => props.handleOnClickUpdate(props.query.data.data[tableMeta.rowIndex])}>
                   <EditIcon />
                 </IconButton>
               </Tooltip>
               <Tooltip title="Remover">
-                <IconButton onClick={() => handleOnClickDelete(query.data.data[tableMeta.rowIndex])}>
+                <IconButton onClick={() => props.handleOnClickDelete(props.query.data.data[tableMeta.rowIndex])}>
                   <DeleteIcon />
                 </IconButton>
               </Tooltip>
@@ -157,55 +115,38 @@ function VacanciesList() {
     }
   ];
 
-  const handleOnClickNew = () => {
-    navigate('/admin/vacancies/new');
-  }
-
-  const handleOnClickUpdate = (vacancy) => {
-    navigate(`/admin/vacancies/edit/${vacancy.id}`);
-  }
-
-  const handleOnClickDelete = (vacancy) => {
-    setOpen(true);
-    setSelectedIdsToDelete([vacancy.id]);
-  }
-
-  const handleOnClickConfirmDelete = () => {
-    setOpen(false);
-    mutation.mutate(selectedIdsToDelete);
-  }
-
-  const handleOnClickBulkDelete = (indexes) => {
-    setOpen(true);
-    setSelectedIdsToDelete(indexes.map(index => query.data.data[index].id));
-  }
-
   return (
     <AdminLayout>
       <DataTable
         title="Vagas"
-        query={query}
+        query={props.query}
         columns={columns}
-        onClickNew={handleOnClickNew}
-        onClickBulDelete={handleOnClickBulkDelete}
+        onClickNew={props.handleOnClickNew}
+        onClickBulDelete={props.handleOnClickBulkDelete}
         columnsToSearch={columnsToSearch}
-        setPage={setPage}
-        rowsPerPage={rowsPerPage}
-        setRowsPerPage={setRowsPerPage}
-        setSortOrder={setSortOrder}
-        setSortColumn={setSortColumn}
-        setSearchText={setSearchText}
-        setSearchColumns={setSearchColumns}
+        setPage={props.setPage}
+        rowsPerPage={props.rowsPerPage}
+        setRowsPerPage={props.setRowsPerPage}
+        setSortOrder={props.setSortOrder}
+        setSortColumn={props.setSortColumn}
+        setSearchText={props.setSearchText}
+        setSearchColumns={props.setSearchColumns}
       />
       <ConfirmationDialog
-        open={open}
+        open={props.open}
         title="Tem certeza?"
         description="Deseja realmente remover os itens selecionados?"
-        onClose={() => setOpen(false)}
-        onConfirm={handleOnClickConfirmDelete}
+        onClose={() => props.setOpen(false)}
+        onConfirm={props.handleOnClickConfirmDelete}
       />
     </AdminLayout>
   );
 }
 
-export default VacanciesList;
+export default withDatatable(
+  VacanciesList, 
+  api.vacancies.list, 
+  api.vacancies.remove, 
+  '/admin/vacancies/new', 
+  '/admin/vacancies/edit'
+);
