@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Api\V1\Admin;
 
 use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CandidateBulkDelete;
-use App\Http\Requests\CandidateDeleteRequest;
-use App\Http\Requests\UserRequest;
+use App\Http\Requests\DeleteCandidateRequest;
+use App\Http\Requests\StoreCandidateRequest;
+use App\Http\Requests\UpdateCandidateRequest;
 use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
 use App\Models\User;
@@ -31,7 +31,7 @@ class CandidateController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(UserRequest $request)
+    public function store(StoreCandidateRequest $request)
     {
         return new UserResource(
             User::create(array_merge(
@@ -59,7 +59,7 @@ class CandidateController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UserRequest $request, $id)
+    public function update(UpdateCandidateRequest $request, $id)
     {
         User::candidates()->findOrFail($id)->update($request->validated());
         return response()->json(null, JsonResponse::HTTP_NO_CONTENT);
@@ -71,7 +71,7 @@ class CandidateController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(CandidateDeleteRequest $request)
+    public function destroy(DeleteCandidateRequest $request)
     {
         $data = $request->validated();
         User::destroy($data['candidates']);

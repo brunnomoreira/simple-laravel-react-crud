@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Api\V1\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\VacancyBulkDelete;
-use App\Http\Requests\VacancyDelete;
-use App\Http\Requests\VacancyDeleteRequest;
-use App\Http\Requests\VacancyRequest;
+use App\Http\Requests\DeleteVacancyRequest;
+use App\Http\Requests\StoreVacancyRequest;
+use App\Http\Requests\UpdateVacancyRequest;
 use App\Http\Resources\VacancyCollection;
 use App\Http\Resources\VacancyResource;
 use App\Models\Vacancy;
@@ -31,7 +30,7 @@ class VacancyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(VacancyRequest $request)
+    public function store(StoreVacancyRequest $request)
     {
         return new VacancyResource(Vacancy::create($request->validated()));
     }
@@ -54,7 +53,7 @@ class VacancyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(VacancyRequest $request, $id)
+    public function update(UpdateVacancyRequest $request, $id)
     {
         Vacancy::findOrFail($id)->update($request->validated());
         return response()->json(null, JsonResponse::HTTP_NO_CONTENT);
@@ -66,7 +65,7 @@ class VacancyController extends Controller
      * @param  array  $ids
      * @return \Illuminate\Http\Response
      */
-    public function destroy(VacancyDeleteRequest $request)
+    public function destroy(DeleteVacancyRequest $request)
     {
         $data = $request->validated();
         Vacancy::destroy($data['vacancies']);

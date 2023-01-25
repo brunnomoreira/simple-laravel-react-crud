@@ -2,9 +2,12 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\VacancyStatus;
+use App\Enums\VacancyType;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class VacancyDeleteRequest extends FormRequest
+class StoreVacancyRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +27,11 @@ class VacancyDeleteRequest extends FormRequest
     public function rules()
     {
         return [
-            'vacancies' => 'required|array',
-            'vacancies.*' => 'integer|exists:vacancies,id'
+            'name' => 'required',
+            'summary' => 'required',
+            'description' => 'required',
+            'type' => ['required', Rule::in(array_column(VacancyType::cases(), 'value'))],
+            'status' => ['required', Rule::in(array_column(VacancyStatus::cases(), 'value'))],
         ];
     }
 }

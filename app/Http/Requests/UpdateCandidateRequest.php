@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\UserRole;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CandidateDeleteRequest extends FormRequest
+class UpdateCandidateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,8 +24,9 @@ class CandidateDeleteRequest extends FormRequest
     public function rules()
     {
         return [
-            'candidates' => 'required|array',
-            'candidates.*' => 'integer|exists:users,id,role,' . UserRole::CANDIDATE->value
+            'name' => 'sometimes|required',
+            'email' => 'sometimes|required|email',
+            'password' => 'sometimes|required|confirmed|min:3'
         ];
     }
 }
